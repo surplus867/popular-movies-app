@@ -13,6 +13,6 @@ public interface MovieApi {
                                           @Query("api_key")String apiKey);
 
     @GET("movie/top_rated")
-    Call<MoviesResponse> getTopRatedMovies(@Query("page") int page,
+    Call<MoviesResponse> getTopRatedMovies(@Query("api_key") int page,
                                            @Query("api_key")String apiKey);
 }

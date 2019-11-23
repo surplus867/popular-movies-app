@@ -1,24 +1,27 @@
 package com.example.android.popular_movies_app;
 
+import android.content.Intent;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.bumptech.glide.Glide;
+import com.example.android.popular_movies_app.model.Movie;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class DetailActivity extends AppCompatActivity {
-    @BindView(R.id.titleTextView) TextView mMovieTite;
+
+    public static final String ARG_Movie = "DETAIL_MOVIE";
+
     @BindView(R.id.iv_detail_movie_poster) ImageView mMoviePoster;
-    @BindView(R.id.ratingLabel) TextView mRatingLabel;
+    @BindView(R.id.titleTextView) TextView mMovieTitle;
     @BindView(R.id.rateTextView)TextView mMovieRating;
-    @BindView(R.id.releaseDateLabel) TextView mReleaseDateLabel;
     @BindView(R.id.releaseDateTextView) TextView mReleaseDate;
-    @BindView(R.id.overviewTextView) TextView mMovieOverview;
     @BindView(R.id.tv_plot_synopsis) TextView mMoviePlot;
 
     @Override
@@ -28,6 +31,19 @@ public class DetailActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
 
+        Intent intent = getIntent();
 
+        if(intent !=null) {
+            Movie movie = (Movie) intent.getSerializableExtra(ARG_Movie);
+
+        if(movie !=null) {
+
+            mMovieTitle.setText("title: " + movie.getTitle());
+            mMovieRating.setText("rate: " + movie.getRate());
+            mReleaseDate.setText("release " + movie.getDate());
+            mMoviePlot.setText("overview " + movie.getOverview());
+            Glide.with(this).load(movie.getMoviePoster()).into(mMoviePoster);
+        }
+        }
     }
 }

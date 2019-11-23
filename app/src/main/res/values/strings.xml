@@ -17,6 +17,7 @@
     <string name="todo">TODO</string>
     <string name="popular">popular</string>
     <string name="favorites">favorites</string>
+    <string name="error_message">Failed to get results. Please try again</string>
 
 </resources>
 

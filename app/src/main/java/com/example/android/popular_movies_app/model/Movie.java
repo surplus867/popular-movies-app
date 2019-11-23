@@ -10,7 +10,6 @@ public class Movie implements Serializable {
     public static final String POSTER_PATH = "poster_path";
     public static final String RELEASE_DATE = "release_date";
     public static final String RATE = "Rate";
-    public static final String ID = "id";
     public static final String OVERVIEW = "overview";
 
 
@@ -25,9 +24,6 @@ public class Movie implements Serializable {
 
     @SerializedName(RELEASE_DATE)
     private String date;
-
-    @SerializedName(ID)
-    private String id;
 
     @SerializedName(RATE)
     private String rate;
@@ -46,10 +42,6 @@ public class Movie implements Serializable {
 
     public static String getRATE() {
         return RATE;
-    }
-
-    public static String getID() {
-        return ID;
     }
 
     public static String getOVERVIEW() {
@@ -86,14 +78,6 @@ public class Movie implements Serializable {
 
     public void setDate(String date) {
         this.date = date;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
     }
 
     public String getRate() {

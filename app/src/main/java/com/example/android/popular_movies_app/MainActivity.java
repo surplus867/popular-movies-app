@@ -1,68 +1,77 @@
 package com.example.android.popular_movies_app;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
-
 import android.os.Bundle;
-import android.widget.GridLayout;
+import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.android.popular_movies_app.adapter.MoviesAdapter;
 import com.example.android.popular_movies_app.model.Movie;
 import com.example.android.popular_movies_app.model.MoviesResponse;
-import com.example.android.popular_movies_app.retrofits.Client;
-import com.example.android.popular_movies_app.retrofits.MovieApi;
+import com.example.android.popular_movies_app.retrofits.RestClient;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class MainActivity extends AppCompatActivity {
 
     public static final String API_KEY = "caa7bbb8acf08fcdc2b3f26cb3219b89";
-    public static int PAGE = 1;
-    private Call<MoviesResponse> call;
-    private List<Movie> movieResults;
-    private RecyclerView recyclerView;
-    private MoviesAdapter moviesAdapter;
+    public static final String KEY_MOVIES_RESPONSE = "KEY_MOVIES_RESPONSE";
+    public static final String TAG = MainActivity.class.getSimpleName();
 
+    @BindView(R.id.recyclerView)
+    RecyclerView mRecyclerView;
+    @BindView(R.id.tv_error_message)
+    TextView mErrorMessage;
+    @BindView(R.id.pb_loading_indicator)
+    ProgressBar mLoadingIndicator;
 
+    private LinearLayoutManager mLayoutManager;
 
-    public static final String TAG = MoviesAdapter.class.getSimpleName();
+    private MoviesAdapter mAdapter;
+
+    private List<Movie> mMovies = new ArrayList<Movie>();
+
+    private MoviesResponse mMoviesResponse;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        ButterKnife.bind(this);
 
-        recyclerView = findViewById(R.id.rv_movies);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setHasFixedSize(true);
+        if (savedInstanceState != null) {
+            mMoviesResponse = (MoviesResponse) savedInstanceState.getSerializable(KEY_MOVIES_RESPONSE);
+            mMovies = mMoviesResponse.getMovies();
+        } else {
+            handleResults();
+        }
 
-        Client Client = new Client();
-        MovieApi movieApi = Client.getClient().create(MovieApi.class);
-        Call<MoviesResponse> call = movieApi.getPopularMovies(PAGE, API_KEY);
-        call.enqueue(new Callback<MoviesResponse>() {
-            @Override
-            public void onResponse(Call<MoviesResponse> call, Response<MoviesResponse> response) {
-
-
-
-            @Override
-            public void onFailure(Call<MoviesResponse> call, Throwable t) {
-            }
-        });
-
+        mRecyclerView.setHasFixedSize(false);
+        mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        mRecyclerView.setLayoutManager(mLayoutManager);
+        mAdapter = new MoviesAdapter(this, mMovies);
+        mRecyclerView.setAdapter(mAdapter);
     }
 
+    @Override
+    public void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable(KEY_MOVIES_RESPONSE,mMoviesResponse);
+    }
 
-}
+    private void handleResults() {
+        mLoadingIndicator.setVisibility(View.VISIBLE);
+        mErrorMessage.setVisibility(View.GONE);
+        RestClient.getMovieApi().
+    }
 
 }

@@ -4,14 +4,18 @@ import com.google.gson.annotations.SerializedName;
 
 import java.io.Serializable;
 
+
 public class Movie implements Serializable {
 
-    public static final String TITLE = "title";
-    public static final String POSTER_PATH = "poster_path";
-    public static final String RELEASE_DATE = "release_date";
-    public static final String RATE = "Rate";
-    public static final String OVERVIEW = "overview";
 
+    public static final String POSTER_PATH = "poster_path";
+    public static final String TITLE = "title";
+    public static final String OVERVIEW = "overview";
+    public static final String VOTE_AVERAGE = "vote_average";
+    public static final String RELEASE_DATE = "release_date";
+    public static final String RATING = "rating";
+    public static final String ID = "id";
+    public static final String REVIEWS = "content";
 
     @SerializedName(POSTER_PATH)
     private String moviePoster;
@@ -22,30 +26,54 @@ public class Movie implements Serializable {
     @SerializedName(OVERVIEW)
     private String overview;
 
+    @SerializedName(VOTE_AVERAGE)
+    private String average;
+
     @SerializedName(RELEASE_DATE)
     private String date;
 
-    @SerializedName(RATE)
-    private String rate;
+    @SerializedName(RATING)
+    private String rating;
 
-    public static String getTITLE() {
-        return TITLE;
+    @SerializedName(ID)
+    private int iD;
+
+    @SerializedName(REVIEWS)
+    private String reviews;
+
+    public Movie() {
     }
 
     public static String getPosterPath() {
         return POSTER_PATH;
     }
 
-    public static String getReleaseDate() {
-        return RELEASE_DATE;
-    }
-
-    public static String getRATE() {
-        return RATE;
+    public static String getTITLE() {
+        return TITLE;
     }
 
     public static String getOVERVIEW() {
         return OVERVIEW;
+    }
+
+    public static String getVoteAverage() {
+        return VOTE_AVERAGE;
+    }
+
+    public static String getReleaseDate() {
+        return RELEASE_DATE;
+    }
+
+    public static String getRATING() {
+        return RATING;
+    }
+
+    public static String getID() {
+        return ID;
+    }
+
+    public static String getREVIEWS() {
+        return REVIEWS;
     }
 
     public String getMoviePoster() {
@@ -72,6 +100,14 @@ public class Movie implements Serializable {
         this.overview = overview;
     }
 
+    public String getAverage() {
+        return average;
+    }
+
+    public void setAverage(String average) {
+        this.average = average;
+    }
+
     public String getDate() {
         return date;
     }
@@ -80,15 +116,27 @@ public class Movie implements Serializable {
         this.date = date;
     }
 
-    public String getRate() {
-        return rate;
+    public String getRating() {
+        return rating;
     }
 
-    public void setRate(String rate) {
-        this.rate = rate;
+    public void setRating(String rating) {
+        this.rating = rating;
     }
 
-    public Movie(){
+    public int getiD() {
+        return iD;
+    }
 
+    public void setiD(int iD) {
+        this.iD = iD;
+    }
+
+    public String getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(String reviews) {
+        this.reviews = reviews;
     }
 }

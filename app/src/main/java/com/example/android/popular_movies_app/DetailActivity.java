@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
@@ -25,7 +24,7 @@ public class DetailActivity extends AppCompatActivity {
     @BindView(R.id.tv_plot_synopsis) TextView mMoviePlot;
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -36,14 +35,14 @@ public class DetailActivity extends AppCompatActivity {
         if(intent !=null) {
             Movie movie = (Movie) intent.getSerializableExtra(ARG_Movie);
 
-        if(movie !=null) {
+            if(movie !=null) {
 
-            mMovieTitle.setText("title: " + movie.getTitle());
-            mMovieRating.setText("rate: " + movie.getRate());
-            mReleaseDate.setText("release " + movie.getDate());
-            mMoviePlot.setText("overview " + movie.getOverview());
-            Glide.with(this).load(movie.getMoviePoster()).into(mMoviePoster);
-        }
+                mMovieTitle.setText("title: " + movie.getTitle());
+                mMovieRating.setText("rate: " + movie.getRating());
+                mReleaseDate.setText("release " + movie.getDate());
+                mMoviePlot.setText("overview " + movie.getOverview());
+                Glide.with(this).load(movie.getMoviePoster()).into(mMoviePoster);
+            }
         }
     }
 }

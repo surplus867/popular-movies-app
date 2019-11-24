@@ -38,7 +38,7 @@ public class MainActivity extends AppCompatActivity {
 
     private MoviesAdapter mAdapter;
 
-    private List<Movie> mMovies = new ArrayList<Movie>();
+    private List<Movie> mMovies = new ArrayList<>();
 
     private MoviesResponse mMoviesResponse;
 
@@ -63,7 +63,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     @Override
-    public void onSaveInstanceState(@NonNull Bundle outState) {
+    public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable(KEY_MOVIES_RESPONSE,mMoviesResponse);
     }
@@ -71,7 +71,8 @@ public class MainActivity extends AppCompatActivity {
     private void handleResults() {
         mLoadingIndicator.setVisibility(View.VISIBLE);
         mErrorMessage.setVisibility(View.GONE);
-        RestClient.getMovieApi().
+
+        RestClient.getMovieApi().getPopularMovieResults(retrofit)
     }
 
 }

@@ -72,7 +72,7 @@ public class MainActivity extends AppCompatActivity {
         mLoadingIndicator.setVisibility(View.VISIBLE);
         mErrorMessage.setVisibility(View.GONE);
 
-        RestClient.getMovieApi().getPopularMovieResults(retrofit)
+        //RestClient.getMovieApi().getPopularMovieResults(retrofit)
     }
 
 }

@@ -1,11 +1,12 @@
 package com.example.android.popular_movies_app;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -13,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.android.popular_movies_app.adapter.MoviesAdapter;
 import com.example.android.popular_movies_app.model.Movie;
 import com.example.android.popular_movies_app.model.MoviesResponse;
+import com.example.android.popular_movies_app.retrofits.MovieApi;
 import com.example.android.popular_movies_app.retrofits.RestClient;
 
 import java.util.ArrayList;
@@ -20,10 +22,14 @@ import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+import retrofit2.Retrofit;
 
 public class MainActivity extends AppCompatActivity {
 
-    public static final String API_KEY = "caa7bbb8acf08fcdc2b3f26cb3219b89";
+    public static final String API_KEY = "";
     public static final String KEY_MOVIES_RESPONSE = "KEY_MOVIES_RESPONSE";
     public static final String TAG = MainActivity.class.getSimpleName();
 
@@ -72,7 +78,25 @@ public class MainActivity extends AppCompatActivity {
         mLoadingIndicator.setVisibility(View.VISIBLE);
         mErrorMessage.setVisibility(View.GONE);
 
-        //RestClient.getMovieApi().getPopularMovieResults(retrofit)
+        Retrofit retrofit = RestClient.getMovieApi();
+        MovieApi movieApi = retrofit.create(MovieApi.class);
+        Call<MoviesResponse> call = movieApi.getMovies("popular", "your api key.....");
+        call.enqueue(new Callback<MoviesResponse>() {
+            @Override
+            public void onResponse(Call<MoviesResponse> call, Response<MoviesResponse> response) {
+                MoviesResponse moviesResponse = response.body();
+                List<Movie> movies = moviesResponse.getMovies();
+                mAdapter.updateData(movies);
+            }
+
+            @Override
+            public void onFailure(Call<MoviesResponse> call, Throwable t) {
+                Toast.makeText(MainActivity. this,"No results found", Toast.LENGTH_SHORT).show();
+                mLoadingIndicator.setVisibility(View.GONE);
+                mErrorMessage.setVisibility(View.VISIBLE);
+            }
+        });
+
     }
 
 }

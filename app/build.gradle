@@ -19,6 +19,9 @@ android {
 
         }
         buildTypes {
+            buildTypes.each {
+                it.buildConfigField 'String', 'Movie_API_KEY', "\"caa7bbb8acf08fcdc2b3f26cb3219b89\""
+            }
             release {
                 minifyEnabled false
                 proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'

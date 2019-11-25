@@ -23,6 +23,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder> {
+    private String IMAGE_BASE_URL = "http://image.tmdb.org/t/p/w500";
 
     private List<Movie> mMovies;
     private Context mContext;
@@ -65,7 +66,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
 
         final Movie movie = mMovies.get(position);
         holder.rowMovie.setText(movie.getTitle());
-        Glide.with(mContext).load(movie.getMoviePoster()).into(holder.rowImage);
+        Glide.with(mContext).load(IMAGE_BASE_URL+ movie.getMoviePoster()).into(holder.rowImage);
 
         holder.rowLayout.setOnClickListener(v -> {
             Toast.makeText(mContext, "Clicked on" + movie.getTitle(),

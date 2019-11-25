@@ -35,11 +35,11 @@ public class MainActivity extends AppCompatActivity {
 
     @BindView(R.id.recyclerView)
     RecyclerView mRecyclerView;
-    @BindView(R.id.tv_error_message)
+    /*@BindView(R.id.tv_error_message)
     TextView mErrorMessage;
     @BindView(R.id.pb_loading_indicator)
     ProgressBar mLoadingIndicator;
-
+*/
     private LinearLayoutManager mLayoutManager;
 
     private MoviesAdapter mAdapter;
@@ -75,25 +75,28 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void handleResults() {
-        mLoadingIndicator.setVisibility(View.VISIBLE);
-        mErrorMessage.setVisibility(View.GONE);
+      /*  mLoadingIndicator.setVisibility(View.VISIBLE);
+        mErrorMessage.setVisibility(View.GONE);*/
 
         Retrofit retrofit = RestClient.getMovieApi();
         MovieApi movieApi = retrofit.create(MovieApi.class);
-        Call<MoviesResponse> call = movieApi.getMovies("popular", "your api key.....");
+        Call<MoviesResponse> call = movieApi.getMovies("popular", "caa7bbb8acf08fcdc2b3f26cb3219b89");
         call.enqueue(new Callback<MoviesResponse>() {
             @Override
             public void onResponse(Call<MoviesResponse> call, Response<MoviesResponse> response) {
                 MoviesResponse moviesResponse = response.body();
-                List<Movie> movies = moviesResponse.getMovies();
+                List<Movie> movies = null;
+                if(moviesResponse != null){
+                    movies = moviesResponse.getMovies();
+                }
                 mAdapter.updateData(movies);
             }
 
             @Override
             public void onFailure(Call<MoviesResponse> call, Throwable t) {
                 Toast.makeText(MainActivity. this,"No results found", Toast.LENGTH_SHORT).show();
-                mLoadingIndicator.setVisibility(View.GONE);
-                mErrorMessage.setVisibility(View.VISIBLE);
+                /*mLoadingIndicator.setVisibility(View.GONE);
+                mErrorMessage.setVisibility(View.VISIBLE);*/
             }
         });
 

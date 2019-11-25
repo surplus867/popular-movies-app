@@ -41,7 +41,8 @@ public class DetailActivity extends AppCompatActivity {
                 mMovieRating.setText("rate: " + movie.getRating());
                 mReleaseDate.setText("release " + movie.getDate());
                 mMoviePlot.setText("overview " + movie.getOverview());
-                Glide.with(this).load(movie.getMoviePoster()).into(mMoviePoster);
+                Glide.with(this).load("https://image.tmdb.org/t/p/w500" + movie.
+                        getMoviePoster()).into(mMoviePoster);
             }
         }
     }

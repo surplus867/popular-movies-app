@@ -1,14 +1,13 @@
 package com.example.android.popular_movies_app;
 
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.android.popular_movies_app.adapter.MoviesAdapter;
@@ -35,12 +34,12 @@ public class MainActivity extends AppCompatActivity {
 
     @BindView(R.id.recyclerView)
     RecyclerView mRecyclerView;
-    /*@BindView(R.id.tv_error_message)
+    @BindView(R.id.tv_error_message)
     TextView mErrorMessage;
     @BindView(R.id.pb_loading_indicator)
     ProgressBar mLoadingIndicator;
-*/
-    private LinearLayoutManager mLayoutManager;
+
+    private GridLayoutManager mLayoutManager;
 
     private MoviesAdapter mAdapter;
 
@@ -62,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         mRecyclerView.setHasFixedSize(false);
-        mLayoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        mLayoutManager = new GridLayoutManager(this, 3);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mAdapter = new MoviesAdapter(this, mMovies);
         mRecyclerView.setAdapter(mAdapter);
@@ -75,8 +74,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void handleResults() {
-      /*  mLoadingIndicator.setVisibility(View.VISIBLE);
-        mErrorMessage.setVisibility(View.GONE);*/
+      mLoadingIndicator.setVisibility(View.VISIBLE);
+        mErrorMessage.setVisibility(View.GONE);
 
         Retrofit retrofit = RestClient.getMovieApi();
         MovieApi movieApi = retrofit.create(MovieApi.class);
@@ -87,7 +86,7 @@ public class MainActivity extends AppCompatActivity {
                 MoviesResponse moviesResponse = response.body();
                 List<Movie> movies = null;
                 if(moviesResponse != null){
-                    movies = moviesResponse.getMovies();
+                 movies = moviesResponse.getMovies();
                 }
                 mAdapter.updateData(movies);
             }
@@ -95,8 +94,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call<MoviesResponse> call, Throwable t) {
                 Toast.makeText(MainActivity. this,"No results found", Toast.LENGTH_SHORT).show();
-                /*mLoadingIndicator.setVisibility(View.GONE);
-                mErrorMessage.setVisibility(View.VISIBLE);*/
+                mLoadingIndicator.setVisibility(View.GONE);
+                mErrorMessage.setVisibility(View.VISIBLE);
             }
         });
 

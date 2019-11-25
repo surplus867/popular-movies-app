@@ -61,7 +61,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         mRecyclerView.setHasFixedSize(false);
-        mLayoutManager = new GridLayoutManager(this, 3);
+        mLayoutManager = new GridLayoutManager(this, 1);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mAdapter = new MoviesAdapter(this, mMovies);
         mRecyclerView.setAdapter(mAdapter);

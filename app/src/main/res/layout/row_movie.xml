@@ -1,22 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="horizontal"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:id="@+id/row_layout">
+    android:layout_height="150dp"
+    android:padding="8dp"
+    android:id="@+id/row_layout"
+    android:background="#fff">
 
     <ImageView
         android:id="@+id/row_image"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_width="100dp"
+        android:layout_height="match_parent"
+        android:background="@drawable/loading_shape"
+        android:contentDescription="@string/todo" />
 
-    <TextView
-        android:id="@+id/row_movie"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/row_image"
-        android:layout_marginLeft="16dp"
-        android:layout_toRightOf="@+id/row_image"
-        android:layout_marginStart="16dp"
-        android:layout_toEndOf="@+id/row_image" />
+    <LinearLayout
+    android:layout_width="match_parent"
+    android:layout_height="130dp"
+    android:orientation="vertical"
+    android:layout_margin="8dp">
 
-</RelativeLayout>
+
+        <TextView
+            android:id="@+id/row_movie"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/movie_title"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+</LinearLayout>

@@ -6,7 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -23,7 +23,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder> {
-    private String IMAGE_BASE_URL = "http://image.tmdb.org/t/p/w500";
+    private String IMAGE_BASE_URL = "http://image.tmdb.org/t/p/w342";
 
     private List<Movie> mMovies;
     private Context mContext;
@@ -69,7 +69,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
         Glide.with(mContext).load(IMAGE_BASE_URL+ movie.getMoviePoster()).into(holder.rowImage);
 
         holder.rowLayout.setOnClickListener(v -> {
-            Toast.makeText(mContext, "Clicked on" + movie.getTitle(),
+            Toast.makeText(mContext, "Clicked on " + movie.getTitle(),
                     Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(mContext, DetailActivity.class);
             intent.putExtra(DetailActivity.ARG_Movie, movie);
@@ -81,7 +81,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.row_layout)
-        RelativeLayout rowLayout;
+        LinearLayout rowLayout;
 
         @BindView(R.id.row_image)
         ImageView rowImage;

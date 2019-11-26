@@ -4,8 +4,7 @@
     <string name="title_movie_detail">Movie Detail</string>
     <string name="detail_rate">Detail Rate</string>
     <string name="release_day">Release Date</string>
-    <string name="tv_plot_synopsis">"" </string>
-
+    <string name="tv_plot_synopsis"> "" </string>
     <string name="label_rate">label rate</string>
     <string name="label_release_date">label release date</string>
     <string name="label_overview">Overview:  </string>

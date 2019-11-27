@@ -1,6 +1,8 @@
 package com.example.android.popular_movies_app;
 
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -39,6 +41,8 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.pb_loading_indicator)
     ProgressBar mLoadingIndicator;
 
+    String query = "popular";
+
     private GridLayoutManager mLayoutManager;
 
     private MoviesAdapter mAdapter;
@@ -61,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         mRecyclerView.setHasFixedSize(false);
-        mLayoutManager = new GridLayoutManager(this,1);
+        mLayoutManager = new GridLayoutManager(this, 1);
         mRecyclerView.setLayoutManager(mLayoutManager);
         mAdapter = new MoviesAdapter(this, mMovies);
         mRecyclerView.setAdapter(mAdapter);
@@ -70,30 +74,30 @@ public class MainActivity extends AppCompatActivity {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putSerializable(KEY_MOVIES_RESPONSE,mMoviesResponse);
+        outState.putSerializable(KEY_MOVIES_RESPONSE, mMoviesResponse);
     }
 
     private void handleResults() {
-      mLoadingIndicator.setVisibility(View.VISIBLE);
+        mLoadingIndicator.setVisibility(View.VISIBLE);
         mErrorMessage.setVisibility(View.GONE);
 
         Retrofit retrofit = RestClient.getMovieApi();
         MovieApi movieApi = retrofit.create(MovieApi.class);
-        Call<MoviesResponse> call = movieApi.getMovies("popular", "your api key.......");
+        Call<MoviesResponse> call = movieApi.getMovies("popular", "your api key.....");
         call.enqueue(new Callback<MoviesResponse>() {
             @Override
             public void onResponse(Call<MoviesResponse> call, Response<MoviesResponse> response) {
                 MoviesResponse moviesResponse = response.body();
                 List<Movie> movies = null;
-                if(moviesResponse != null){
-                 movies = moviesResponse.getMovies();
+                if (moviesResponse != null) {
+                    movies = moviesResponse.getMovies();
                 }
                 mAdapter.updateData(movies);
             }
 
             @Override
             public void onFailure(Call<MoviesResponse> call, Throwable t) {
-                Toast.makeText(MainActivity. this,"No results found", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, "No results found", Toast.LENGTH_SHORT).show();
                 mLoadingIndicator.setVisibility(View.GONE);
                 mErrorMessage.setVisibility(View.VISIBLE);
             }
@@ -101,4 +105,35 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-}
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        if(id == R.id.action_popular) {
+            query = "popular";
+            handleResults();
+            return true;
+        }
+
+        if(id == R.id.action_top_rated) {
+            query = "top_rated";
+            handleResults();
+            return true;
+        }
+
+        if(id == R.id.favorite_movies) {
+            query = "favorites";
+            handleResults();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+
+        }
+    }

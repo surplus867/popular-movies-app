@@ -17,9 +17,9 @@ public class DetailActivity extends AppCompatActivity {
 
     public static final String ARG_Movie = "DETAIL_MOVIE";
 
-    @BindView(R.id.iv_detail_movie_poster) ImageView mMoviePoster;
+    @BindView(R.id.posterImageView) ImageView mMoviePoster;
     @BindView(R.id.titleTextView) TextView mMovieTitle;
-    @BindView(R.id.rateTextView)TextView mMovieRating;
+    @BindView(R.id.ratingTextView)TextView mMovieRating;
     @BindView(R.id.releaseDateTextView) TextView mReleaseDate;
     @BindView(R.id.tv_plot_synopsis) TextView mMoviePlot;
 
@@ -40,10 +40,10 @@ public class DetailActivity extends AppCompatActivity {
 
             if(movie !=null) {
 
-                mMovieTitle.setText("title: " + movie.getTitle());
-                mMovieRating.setText("rate: " + movie.getRating());
-                mReleaseDate.setText("release " + movie.getDate());
-                mMoviePlot.setText("overview " + movie.getOverview());
+                mMovieTitle.setText(movie.getTitle());
+                mMovieRating.setText(movie.getRating());
+                mReleaseDate.setText( movie.getDate());
+                mMoviePlot.setText(movie.getOverview());
                 Glide.with(this).load("https://image.tmdb.org/t/p/w500" + movie.
                         getMoviePoster()).into(mMoviePoster);
             }

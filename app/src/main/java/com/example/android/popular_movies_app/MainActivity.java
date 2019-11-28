@@ -57,6 +57,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
+        // Check if we have data to display (after rotation)
         if (savedInstanceState != null) {
             mMoviesResponse = (MoviesResponse) savedInstanceState.getSerializable(KEY_MOVIES_RESPONSE);
             mMovies = mMoviesResponse.getMovies();
@@ -83,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
 
         Retrofit retrofit = RestClient.getMovieApi();
         MovieApi movieApi = retrofit.create(MovieApi.class);
-        Call<MoviesResponse> call = movieApi.getMovies("popular", "your api key.....");
+        Call<MoviesResponse> call = movieApi.getMovies("popular", "caa7bbb8acf08fcdc2b3f26cb3219b89");
         call.enqueue(new Callback<MoviesResponse>() {
             @Override
             public void onResponse(Call<MoviesResponse> call, Response<MoviesResponse> response) {
@@ -92,6 +93,7 @@ public class MainActivity extends AppCompatActivity {
                 if (moviesResponse != null) {
                     movies = moviesResponse.getMovies();
                 }
+                mLoadingIndicator.setVisibility(View.GONE);
                 mAdapter.updateData(movies);
             }
 

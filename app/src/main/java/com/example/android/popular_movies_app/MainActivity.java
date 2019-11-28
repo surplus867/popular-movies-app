@@ -84,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
 
         Retrofit retrofit = RestClient.getMovieApi();
         MovieApi movieApi = retrofit.create(MovieApi.class);
-        Call<MoviesResponse> call = movieApi.getMovies("popular", "caa7bbb8acf08fcdc2b3f26cb3219b89");
+        Call<MoviesResponse> call = movieApi.getMovies("popular", "your api key......");
         call.enqueue(new Callback<MoviesResponse>() {
             @Override
             public void onResponse(Call<MoviesResponse> call, Response<MoviesResponse> response) {

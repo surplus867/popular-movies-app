@@ -42,7 +42,7 @@ public class DetailActivity extends AppCompatActivity {
 
 
                 mMovieTitle.setText(movie.getTitle());
-                mVoteAverage.setText(movie.getVoteAverage());
+                mVoteAverage.setText("" + movie.getAverage() + "/10");
                 mReleaseDate.setText( movie.getDate());
                 mMoviePlot.setText(movie.getOverview());
                 Glide.with(this).load("https://image.tmdb.org/t/p/w500" + movie.

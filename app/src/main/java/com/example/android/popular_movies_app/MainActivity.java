@@ -142,6 +142,7 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
+    //here you can dynamically calculate the number of columns and the layout will adapt to the screen size and orientation
     private int numberOfColumns() {
         DisplayMetrics displayMetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);

@@ -1,6 +1,7 @@
 package com.example.android.popular_movies_app;
 
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -66,7 +67,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         mRecyclerView.setHasFixedSize(false);
-        mLayoutManager = new GridLayoutManager(this, 1);
+        mLayoutManager = new GridLayoutManager(this, numberOfColumns());
         mRecyclerView.setLayoutManager(mLayoutManager);
         mAdapter = new MoviesAdapter(this, mMovies);
         mRecyclerView.setAdapter(mAdapter);
@@ -84,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
 
         Retrofit retrofit = RestClient.getMovieApi();
         MovieApi movieApi = retrofit.create(MovieApi.class);
-        Call<MoviesResponse> call = movieApi.getMovies("popular", "your api key......");
+        Call<MoviesResponse> call = movieApi.getMovies("popular", "your api key..... ");
         call.enqueue(new Callback<MoviesResponse>() {
             @Override
             public void onResponse(Call<MoviesResponse> call, Response<MoviesResponse> response) {
@@ -115,27 +116,41 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+
         int id = item.getItemId();
 
-        if(id == R.id.action_popular) {
+        if (id == R.id.action_popular) {
             query = "popular";
             handleResults();
             return true;
         }
 
-        if(id == R.id.action_top_rated) {
+        if (id == R.id.action_top_rated) {
             query = "top_rated";
             handleResults();
             return true;
         }
 
-        if(id == R.id.favorite_movies) {
+        if (id == R.id.favorite_movies) {
             query = "favorites";
             handleResults();
             return true;
         }
 
+
         return super.onOptionsItemSelected(item);
 
-        }
     }
+
+    private int numberOfColumns() {
+        DisplayMetrics displayMetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        // You can Change this divider to adjust the size of the item
+        int widthDivider = 400;
+        int width = displayMetrics.widthPixels;
+        int nColumns = width/ widthDivider;
+        if(nColumns < 2) return 2; //to keep the grid aspect
+        return nColumns;
+
+    }
+}

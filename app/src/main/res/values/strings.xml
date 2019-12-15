@@ -5,7 +5,7 @@
     <string name="title_movie_list">Movie Title</string>
     <string name="title_movie_detail">Movie Detail</string>
     <string name="detail_rate">5.0</string>
-    <string name="release_day">Release Date</string>
+    <string name="release_day">13/12/2019</string>
     <string name="tv_plot_synopsis"> "" </string>
     <!--detail-->
     <string name="label_rate">Rate:</string>
@@ -16,9 +16,16 @@
     <string name="top_rated">top_rated</string>
     <string name="favorites">favorites</string>
 
-    <string name="todo">TODO</string>
+    <string name="movie_poster">movie poster</string>
     <!-- row movie title-->
     <string name="movie_title">movie title</string>
+    <string name="add_to_favorites">add to favorites</string>
+    <string name="label_trailers">Trailers</string>
+    <string name="trailers">Trailers</string>
+    <string name="movie_trailer_icon">movie_trailer_icon</string>
+    <string name="reviews">Reviews</string>
+    <string name="trailer">Trailer</string>
+    <string name="user_reviews">user reviews</string>
 
 </resources>
 

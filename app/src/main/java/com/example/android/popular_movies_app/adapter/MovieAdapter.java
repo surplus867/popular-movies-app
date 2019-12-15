@@ -6,10 +6,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -22,15 +22,15 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
-public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder> {
+public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> {
     private String IMAGE_BASE_URL = "http://image.tmdb.org/t/p/w342";
 
     private List<Movie> mMovies;
     private Context mContext;
 
-    public static final String TAG = MoviesAdapter.class.getSimpleName();
+    public static final String TAG = MovieAdapter.class.getSimpleName();
 
-    public MoviesAdapter(Context context, List<Movie> movies) {
+    public MovieAdapter(Context context, List<Movie> movies) {
         mContext = context;
         mMovies = movies;
 
@@ -68,7 +68,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
         holder.rowMovie.setText(movie.getTitle());
         Glide.with(mContext).load(IMAGE_BASE_URL+ movie.getMoviePoster()).into(holder.rowImage);
 
-        holder.rowLayout.setOnClickListener(v -> {
+        holder.rowLayout.setOnClickListener((View v) -> {
             Toast.makeText(mContext, "Clicked on " + movie.getTitle(),
                     Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(mContext, DetailActivity.class);
@@ -81,7 +81,7 @@ public class MoviesAdapter extends RecyclerView.Adapter<MoviesAdapter.ViewHolder
 
     public class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.row_layout)
-        LinearLayout rowLayout;
+        CardView rowLayout;
 
         @BindView(R.id.row_image)
         ImageView rowImage;

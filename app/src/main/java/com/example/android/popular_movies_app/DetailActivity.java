@@ -6,9 +6,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.example.android.popular_movies_app.model.Movie;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -22,6 +24,12 @@ public class DetailActivity extends AppCompatActivity {
     @BindView(R.id.ratingTextView)TextView mVoteAverage;
     @BindView(R.id.releaseDateTextView) TextView mReleaseDate;
     @BindView(R.id.tv_plot_synopsis) TextView mMoviePlot;
+    @BindView(R.id.movie_activity_favorite) FloatingActionButton mFavoriteButton;
+    @BindView(R.id.movie_activity_trailer_label) TextView mMovieTrailerLabel;
+    @BindView(R.id.movie_activity_trailer_label) TextView mReviewsLabel;
+
+    @BindView(R.id.rv_movie_trailers) RecyclerView mTrailerRecyclerView;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {

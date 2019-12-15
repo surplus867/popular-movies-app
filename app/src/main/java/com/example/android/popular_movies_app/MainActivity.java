@@ -13,7 +13,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.android.popular_movies_app.adapter.MoviesAdapter;
+import com.example.android.popular_movies_app.adapter.MovieAdapter;
 import com.example.android.popular_movies_app.model.Movie;
 import com.example.android.popular_movies_app.model.MoviesResponse;
 import com.example.android.popular_movies_app.retrofits.MovieApi;
@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
 
     private GridLayoutManager mLayoutManager;
 
-    private MoviesAdapter mAdapter;
+    private MovieAdapter mAdapter;
 
     private List<Movie> mMovies = new ArrayList<>();
 
@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView.setHasFixedSize(false);
         mLayoutManager = new GridLayoutManager(this, numberOfColumns());
         mRecyclerView.setLayoutManager(mLayoutManager);
-        mAdapter = new MoviesAdapter(this, mMovies);
+        mAdapter = new MovieAdapter(this, mMovies);
         mRecyclerView.setAdapter(mAdapter);
     }
 
@@ -85,7 +85,7 @@ public class MainActivity extends AppCompatActivity {
 
         Retrofit retrofit = RestClient.getMovieApi();
         MovieApi movieApi = retrofit.create(MovieApi.class);
-        Call<MoviesResponse> call = movieApi.getMovies("popular", "your api key..... ");
+        Call<MoviesResponse> call = movieApi.getMovies("popular", "api_key..........");
         call.enqueue(new Callback<MoviesResponse>() {
             @Override
             public void onResponse(Call<MoviesResponse> call, Response<MoviesResponse> response) {

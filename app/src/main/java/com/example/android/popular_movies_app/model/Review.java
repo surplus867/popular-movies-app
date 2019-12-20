@@ -21,7 +21,7 @@ public class Review implements Serializable {
     private String url;
 
     @SerializedName(ID)
-    private String iD;
+    private String id;
 
     public Review() {
 
@@ -67,11 +67,11 @@ public class Review implements Serializable {
         this.url = url;
     }
 
-    public String getiD() {
-        return iD;
+    public String getId() {
+        return id;
     }
 
-    public void setiD(String iD) {
-        this.iD = iD;
+    public void setId(String id) {
+        this.id = id;
     }
 }

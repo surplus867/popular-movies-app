@@ -6,7 +6,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.android.popular_movies_app.R;
@@ -32,7 +31,7 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ViewHolder
     }
 
     @Override
-    public void onBindViewHolder(@NonNull ReviewAdapter.ViewHolder holder, int position) {
+    public void onBindViewHolder(ReviewAdapter.ViewHolder holder, int position) {
         String AuthorToBind = mReviewData[position].getAuthor();
         String ReviewToBind = mReviewData[position].getContent();
         mReviewListTextView.setText(ReviewToBind);
@@ -52,8 +51,8 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ViewHolder
 
         public ViewHolder(View itemView) {
             super(itemView);
-            mReviewListTextView = (TextView) itemView.findViewById(R.id.row_review);
-            mAuthorListTextView = (TextView) itemView.findViewById(R.id.tv_author);
+            mReviewListTextView =  itemView.findViewById(R.id.row_review);
+            mAuthorListTextView =  itemView.findViewById(R.id.tv_author);
         }
     }
 }

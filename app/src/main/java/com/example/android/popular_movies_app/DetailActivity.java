@@ -49,7 +49,7 @@ public class DetailActivity extends AppCompatActivity {
     @BindView(R.id.tv_plot_synopsis) TextView mMoviePlot;
     @BindView(R.id.favorite_button) FloatingActionButton mFavorites;
     @BindView(R.id.movie_activity_trailer_label) TextView mMovieTrailerLabel;
-    @BindView(R.id.movie_activity_trailer_label) TextView mReviewsLabel;
+    @BindView(R.id.detail_reviews) TextView mReviewsLabel;
 
     @BindView(R.id.rv_movie_trailers) RecyclerView mTrailerRecyclerView;
 

@@ -1,6 +1,7 @@
 package com.example.android.popular_movies_app.retrofits;
 
 import com.example.android.popular_movies_app.model.MoviesResponse;
+import com.example.android.popular_movies_app.model.ReviewResponse;
 import com.example.android.popular_movies_app.model.TrailerResponse;
 
 import retrofit2.Call;
@@ -9,6 +10,9 @@ import retrofit2.http.Path;
 import retrofit2.http.Query;
 
 public interface MovieApi {
+
+    @GET("movie/{sort}")
+    Call<MoviesResponse> getMovies(@Path("sort")String sort,@Query("api_key")String apiKey);
 
     @GET("movie/popular")
     Call<MoviesResponse> getPopularMovies(@Query("api_key") String apiKey);
@@ -19,6 +23,8 @@ public interface MovieApi {
     @GET("movie/{id}/videos")
     Call<TrailerResponse> getTrailers(@Path("id") int movieId, @Query("api_key") String apiKey);
 
-    @GET("movie/{sort}")
-    Call<MoviesResponse> getMovies(@Path("sort")String sort,@Query("api_key")String apiKey);
+    @GET("movie/{id}/reviews")
+    Call<ReviewResponse> getReviews(@Path("id") int movieId, @Query("api_key") String apiKey);
+
+
 }

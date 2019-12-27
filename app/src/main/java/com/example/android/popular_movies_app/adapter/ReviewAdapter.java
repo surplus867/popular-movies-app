@@ -11,11 +11,13 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.android.popular_movies_app.R;
 import com.example.android.popular_movies_app.model.Review;
 
+
 public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ViewHolder> {
 
     private Review[] mReviewData;
-    public static TextView mReviewListTextView = null;
-    public static TextView mAuthorListTextView = null;
+    public TextView mReviewListTextView;
+    public TextView mAuthorListTextView;
+
     private Context mContext;
 
     public ReviewAdapter(Review[] review) {
@@ -47,6 +49,9 @@ public class ReviewAdapter extends RecyclerView.Adapter<ReviewAdapter.ViewHolder
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
+
+        public TextView mReviewListTextView;
+        public TextView mAuthorListTextView;
 
 
         public ViewHolder(View itemView) {

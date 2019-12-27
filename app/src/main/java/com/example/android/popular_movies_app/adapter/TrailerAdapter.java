@@ -7,61 +7,69 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.android.popular_movies_app.R;
 import com.example.android.popular_movies_app.model.Trailer;
 
+import java.util.List;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+
 public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.ViewHolder> {
 
-    private Trailer[] mTrailerData;
-    String TMDB_TRAILER_BASE_URL = "https://www.youtube.com/watch?v=";
-    public static TextView mTrailerListTextView = null;
     private Context mContext;
+    private List<Trailer> mTrailer;
 
-    public TrailerAdapter(Trailer[] trailer, Context context) {
-      mContext = context;
-      mTrailerData = trailer;
+    public TrailerAdapter(Context context, List<Trailer> trailer) {
+        mContext = context;
+        mTrailer = trailer;
+    }
+
+
+    @Override
+    public TrailerAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        View v = LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.row_trailer, parent, false);
+        return new ViewHolder(v);
     }
 
     @Override
-    public TrailerAdapter.ViewHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
-        int layoutIdForListItem = R.layout.row_trailer;
-        LayoutInflater inflater = LayoutInflater.from(mContext);
-
-        View view = inflater.inflate(layoutIdForListItem, viewGroup, false);
-        return new ViewHolder(view);
-
-    }
-
-    @Override
-    public void onBindViewHolder(TrailerAdapter.ViewHolder holder, int position) {
-        String TrailerToBind = mTrailerData[position].getName();
-        final String TrailerToWatch = mTrailerData[position].getName();
-        mTrailerListTextView.setText(TrailerToBind);
-        holder.itemView.setOnClickListener(view -> {
-            Uri openTrailerVideo = Uri.parse(TMDB_TRAILER_BASE_URL + TrailerToWatch);
-            Intent intent = new Intent(Intent.ACTION_VIEW, openTrailerVideo);
-            mContext.startActivity(intent);
-        });
-
+    public void onBindViewHolder(ViewHolder holder, final int position) {
+        final Trailer trailer = mTrailer.get(position);
+        holder.rowTrailer.setText(trailer.getName());
     }
 
     @Override
     public int getItemCount() {
-       if(null == mTrailerData) {
-           return 0;
-       }
-       return mTrailerData.length;
+        return mTrailer.size();
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
+        @BindView(R.id.row_trailer)
+        TextView rowTrailer;
 
+        public ViewHolder(View v) {
+            super(v);
+            ButterKnife.bind(this, v);
 
-        public ViewHolder(View itemView) {
-            super(itemView);
-            mTrailerListTextView = itemView.findViewById(R.id.row_trailer);
+            v.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int pos = getAdapterPosition();
+                    if (pos != RecyclerView.NO_POSITION) {
+                        Trailer trailer = mTrailer.get(pos);
+                        String videoKey = mTrailer.get(pos).getKey();
+                        Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://www.youtube.com/watch?v=" + videoKey));
+                        intent.putExtra("VIDEO_ID", videoKey);
+                        mContext.startActivity(intent);
+                        Toast.makeText(v.getContext(), "You clicked" + trailer.getName(), Toast.LENGTH_SHORT).show();
+                    }
+                }
+            });
         }
     }
 }

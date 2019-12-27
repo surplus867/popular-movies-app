@@ -1,7 +1,11 @@
 package com.example.android.popular_movies_app;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -29,7 +33,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements SharedPreferences.OnSharedPreferenceChangeListener {
 
     public static final String API_KEY = "";
     public static final String KEY_MOVIES_RESPONSE = "KEY_MOVIES_RESPONSE";
@@ -41,8 +45,6 @@ public class MainActivity extends AppCompatActivity {
     TextView mErrorMessage;
     @BindView(R.id.pb_loading_indicator)
     ProgressBar mLoadingIndicator;
-
-    String query = "popular";
 
     private GridLayoutManager mLayoutManager;
 
@@ -85,7 +87,7 @@ public class MainActivity extends AppCompatActivity {
 
         Retrofit retrofit = RestClient.getMovieApi();
         MovieApi movieApi = retrofit.create(MovieApi.class);
-        Call<MoviesResponse> call = movieApi.getMovies("popular", "api_key..........");
+        Call<MoviesResponse> call = movieApi.getPopularMovies("");
         call.enqueue(new Callback<MoviesResponse>() {
             @Override
             public void onResponse(Call<MoviesResponse> call, Response<MoviesResponse> response) {
@@ -100,13 +102,43 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onFailure(Call<MoviesResponse> call, Throwable t) {
-                Toast.makeText(MainActivity.this, "No results found", Toast.LENGTH_SHORT).show();
+                Toast.makeText(MainActivity.this, R.string.no_results_found, Toast.LENGTH_SHORT).show();
                 mLoadingIndicator.setVisibility(View.GONE);
                 mErrorMessage.setVisibility(View.VISIBLE);
             }
         });
 
     }
+
+    private void handleResults2() {
+        mLoadingIndicator.setVisibility(View.VISIBLE);
+        mErrorMessage.setVisibility(View.GONE);
+
+        Retrofit retrofit = RestClient.getMovieApi();
+        MovieApi movieApi = retrofit.create(MovieApi.class);
+        Call<MoviesResponse> call = movieApi.getTopRatedMovies("");
+        call.enqueue(new Callback<MoviesResponse>() {
+            @Override
+            public void onResponse(Call<MoviesResponse> call, Response<MoviesResponse> response) {
+                MoviesResponse moviesResponse = response.body();
+                List<Movie> movies = null;
+                if (moviesResponse != null) {
+                    movies = moviesResponse.getMovies();
+                }
+                mLoadingIndicator.setVisibility(View.GONE);
+                mAdapter.updateData(movies);
+            }
+
+            @Override
+            public void onFailure(Call<MoviesResponse> call, Throwable t) {
+                Toast.makeText(MainActivity.this, R.string.no_results_found, Toast.LENGTH_SHORT).show();
+                mLoadingIndicator.setVisibility(View.GONE);
+                mErrorMessage.setVisibility(View.VISIBLE);
+            }
+        });
+
+    }
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -116,31 +148,45 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-
         int id = item.getItemId();
-
-
-        if (id == R.id.action_popular) {
-            query = "popular";
-            handleResults();
-            return true;
+        switch (id) {
+            case R.id.menu_settings:
+                Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
+                startActivity(intent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
         }
+    }
 
-        if (id == R.id.action_top_rated) {
-            query = "top_rated";
+    @Override
+    public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+        Log.d(TAG, "Preferences updated");
+        checkSortOrder();
+    }
+
+    private void checkSortOrder() {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        String sortOrder = preferences.getString(this.getString(R.string.pref_sort_order_key),
+                this.getString(R.string.pref_most_popular)
+        );
+        if (sortOrder.equals(this.getString(R.string.pref_most_popular))) {
+            Log.d(TAG, "Sorting by most popular");
             handleResults();
-            return true;
+        } else {
+            Log.d(TAG, "Sorting by vote average");
+            handleResults2();
         }
+    }
 
-        if (id == R.id.favorite_movies) {
-            query = "favorites";
-            handleResults();
-            return true;
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (mMovies.isEmpty()) {
+            checkSortOrder();
+        } else {
+            checkSortOrder();
         }
-
-
-        return super.onOptionsItemSelected(item);
-
     }
 
     //here you can dynamically calculate the number of columns and the layout will adapt to the screen size and orientation
@@ -155,4 +201,5 @@ public class MainActivity extends AppCompatActivity {
         return nColumns;
 
     }
-}
+
+    }

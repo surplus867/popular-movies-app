@@ -26,9 +26,12 @@
     <string name="reviews">Reviews</string>
     <string name="trailer">Trailer</string>
     <string name="user_reviews">user reviews</string>
+    <string name="no_results_found">No results found…Please try again later!</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="pref_sort_order_label">Sort Order</string>
+    <string name="pref_sort_order_key">sortOrder</string>
+    <string name="pref_most_popular">Most Popular</string>
+    <string name="pref_highest_rated">Highest Rated</string>
+    <string name="action_settings">action settings</string>
 
 </resources>
-

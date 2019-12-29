@@ -103,7 +103,7 @@ public class DetailActivity extends AppCompatActivity {
                 mMoviePlot.setText(mMovie.getOverview());
                 String poster = "http://image.tmdb.org/t/p/w500";
                 Glide.with(this).load(poster + mMovie.
-                        getMoviePoster()).into(mMoviePoster);
+                        getPoserPath()).into(mMoviePoster);
                 String userRatingText = mMovie.getVoteAverage() + "/10";
                 mVoteAverage.setText(userRatingText);
 

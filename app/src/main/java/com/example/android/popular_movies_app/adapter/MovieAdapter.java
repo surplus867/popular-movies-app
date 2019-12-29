@@ -44,8 +44,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
 
     @Override
     public int getItemCount() {
-        if(mMovies == null);
-        return 0;
+        return mMovies.size();
     }
 
     @Override
@@ -67,7 +66,7 @@ public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> 
 
         final Movie movie = mMovies.get(position);
         holder.rowMovie.setText(movie.getTitle());
-        Glide.with(mContext).load(IMAGE_BASE_URL+ movie.getMoviePoster()).into(holder.rowImage);
+        Glide.with(mContext).load(IMAGE_BASE_URL+ movie.getPoserPath()).into(holder.rowImage);
 
         holder.rowLayout.setOnClickListener((View v) -> {
             Toast.makeText(mContext, "Clicked on " + movie.getTitle(),

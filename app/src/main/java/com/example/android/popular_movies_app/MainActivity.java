@@ -94,7 +94,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
         Retrofit retrofit = RestClient.getMovieApi();
         MovieApi movieApi = retrofit.create(MovieApi.class);
-        Call<MoviesResponse> call = movieApi.getPopularMovies("");
+        Call<MoviesResponse> call = movieApi.getPopularMovies("caa7bbb8acf08fcdc2b3f26cb3219b89");
         call.enqueue(new Callback<MoviesResponse>() {
             @Override
             public void onResponse(Call<MoviesResponse> call, Response<MoviesResponse> response) {
@@ -123,7 +123,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
         Retrofit retrofit = RestClient.getMovieApi();
         MovieApi movieApi = retrofit.create(MovieApi.class);
-        Call<MoviesResponse> call = movieApi.getTopRatedMovies("");
+        Call<MoviesResponse> call = movieApi.getTopRatedMovies("caa7bbb8acf08fcdc2b3f26cb3219b89");
         call.enqueue(new Callback<MoviesResponse>() {
             @Override
             public void onResponse(Call<MoviesResponse> call, Response<MoviesResponse> response) {

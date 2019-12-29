@@ -74,6 +74,7 @@ public class DetailActivity extends AppCompatActivity {
     private MovieDatabase mDb;
     private MovieEntry mMovieEntry;
     private Movie mMovie;
+    private boolean isChecked;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -95,7 +96,7 @@ public class DetailActivity extends AppCompatActivity {
             mDb = MovieDatabase.getInstance(getApplicationContext());
 
 
-            if (movie!= null) {
+            if (movie != null) {
 
                 mMovieTitle.setText(mMovie.getTitle());
                 mReleaseDate.setText(mMovie.getDate());
@@ -110,61 +111,62 @@ public class DetailActivity extends AppCompatActivity {
                 FAB.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        if(isChecked) {
+                        if (isChecked) {
                             Snackbar.make(view, "Already saved in favorites", Snackbar.LENGTH_LONG)
                                     .setAction("Action", null).show();
-                        }else{
+                        } else {
 
                         }
-
-            });
-
-            }
-
-
-        private void getTrailers (int movieId){
-                RestClient restClient = new RestClient();
-                MovieApi movieApi = RestClient.getMovieApi().create(MovieApi.class);
-                Call<TrailerResponse> call = movieApi.getTrailers(movieId, API_KEY);
-
-                call.enqueue(new Callback<TrailerResponse>() {
-                    @Override
-                    public void onResponse(Call<TrailerResponse> call, Response<TrailerResponse> response) {
-                        mMovieTrailers = response.body().getTrailerList();
-                        //populateTrailers(mMovieTrailers);
                     }
 
-                    @Override
-                    public void onFailure(Call<TrailerResponse> call, Throwable t) {
-                        Log.d("Error", t.getMessage());
-                        Toast.makeText(DetailActivity.this, R.string.no_results_found, Toast.LENGTH_SHORT).show();
-
-                    }
                 });
             }
 
-            private void getReviews( int movieId) {
-                MovieApi movieApi = RestClient.getMovieApi().create(MovieApi.class);
-                Call<ReviewResponse> call = movieApi.getReviews(movieId, API_KEY);
-
-                call.enqueue(new Callback<ReviewResponse>() {
-                    @Override
-                    public void onResponse(Call<ReviewResponse> call, Response<ReviewResponse> response) {
-                        assert response.body() != null;
-                        mMovieReviews = response.body().getReviews();
-                        //populateReviews(mMovieReviews);
-
-                    }
-
-                    @Override
-                    public void onFailure(Call<ReviewResponse> call, Throwable t) {
-                        Toast.makeText(DetailActivity.this, R.string.no_results_found, Toast.LENGTH_SHORT).show();
-
-                    }
-                });
-
-            }
         }
+    }
+    private void getTrailers(int movieId){
+        RestClient restClient = new RestClient();
+        MovieApi movieApi = RestClient.getMovieApi().create(MovieApi.class);
+        Call<TrailerResponse> call = movieApi.getTrailers(movieId, API_KEY);
+
+        call.enqueue(new Callback<TrailerResponse>() {
+            @Override
+            public void onResponse(Call<TrailerResponse> call, Response<TrailerResponse> response) {
+                mMovieTrailers = response.body().getTrailerList();
+                //populateTrailers(mMovieTrailers);
+            }
+
+            @Override
+            public void onFailure(Call<TrailerResponse> call, Throwable t) {
+                Log.d("Error", t.getMessage());
+                Toast.makeText(DetailActivity.this, R.string.no_results_found, Toast.LENGTH_SHORT).show();
+
+            }
+        });
+    }
+
+    private void getReviews(int movieId) {
+        MovieApi movieApi = RestClient.getMovieApi().create(MovieApi.class);
+        Call<ReviewResponse> call = movieApi.getReviews(movieId, API_KEY);
+
+        call.enqueue(new Callback<ReviewResponse>() {
+            @Override
+            public void onResponse(Call<ReviewResponse> call, Response<ReviewResponse> response) {
+                assert response.body() != null;
+                mMovieReviews = response.body().getReviews();
+                //populateReviews(mMovieReviews);
+
+            }
+
+            @Override
+            public void onFailure(Call<ReviewResponse> call, Throwable t) {
+                Toast.makeText(DetailActivity.this, R.string.no_results_found, Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
+    }
+
 
     private void initViews() {
         mMovieTrailers = new ArrayList<>();
@@ -174,16 +176,20 @@ public class DetailActivity extends AppCompatActivity {
 
 
     @Override
-        protected void onSaveInstanceState (Bundle outState){
-            super.onSaveInstanceState(outState);
-            outState.putSerializable("movie", mMovie);
-            if (isOnline()) {
-                outState.putSerializable("movie_reviews", mMovieReviews);
-                outState.putSerializable("movie_trailers", mMovieTrailers);
-            }
-
+    protected void onSaveInstanceState(Bundle outState){
+        super.onSaveInstanceState(outState);
+        outState.putSerializable("movie", mMovie);
+        if (isOnline()) {
+//            outState.putSerializable("movie_reviews", mMovieReviews);
+//            outState.putSerializable("movie_trailers", mMovieTrailers);
         }
+
     }
+
+    private boolean isOnline() {
+        return true;
+    }
+
 }
 
 
@@ -233,4 +239,3 @@ public class DetailActivity extends AppCompatActivity {
 
     }
     }*/
-

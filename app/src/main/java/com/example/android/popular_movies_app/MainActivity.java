@@ -83,7 +83,10 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         mRecyclerView.setLayoutManager(mLayoutManager);
         mAdapter = new MovieAdapter(this, mMovies);
         mRecyclerView.setAdapter(mAdapter);
-    }
+
+        observeFavoriteMovies();
+
+}
 
     private void handleResults() {
         mLoadingIndicator.setVisibility(View.VISIBLE);

@@ -38,6 +38,16 @@ public class MovieEntry {
         this.releaseDate = releaseDate;
         this.overview = overview;
     }
+    public MovieEntry(int id, int movieId, String originalTitle, String posterPath,
+                      double voteAverage, String releaseDate, String overview){
+        this.id = id;
+        this.movieId = movieId;
+        this.originalTitle = originalTitle;
+        this.posterPath = posterPath;
+        this.voteAverage = voteAverage;
+        this.releaseDate = releaseDate;
+        this.overview = overview;
+    }
 
     public int getId() {
         return id;

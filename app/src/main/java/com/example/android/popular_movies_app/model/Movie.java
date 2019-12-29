@@ -18,7 +18,7 @@ public class Movie implements Serializable {
     public static final String REVIEWS = "content";
 
     @SerializedName(POSTER_PATH)
-    private String moviePoster;
+    private String poserPath;
 
     @SerializedName(TITLE)
     private String title;
@@ -27,7 +27,7 @@ public class Movie implements Serializable {
     private String overview;
 
     @SerializedName(VOTE_AVERAGE)
-    private String average;
+    private Double average;
 
     @SerializedName(RELEASE_DATE)
     private String date;
@@ -56,7 +56,7 @@ public class Movie implements Serializable {
         return OVERVIEW;
     }
 
-    public static double getVoteAverage() {
+    public static String getVoteAverage() {
         return VOTE_AVERAGE;
     }
 
@@ -76,12 +76,12 @@ public class Movie implements Serializable {
         return REVIEWS;
     }
 
-    public String getMoviePoster() {
-        return moviePoster;
+    public String getPoserPath() {
+        return poserPath;
     }
 
-    public void setMoviePoster(String moviePoster) {
-        this.moviePoster = moviePoster;
+    public void setPoserPath(String poserPath) {
+        this.poserPath = poserPath;
     }
 
     public String getTitle() {
@@ -100,11 +100,11 @@ public class Movie implements Serializable {
         this.overview = overview;
     }
 
-    public String getAverage() {
+    public Double getAverage() {
         return average;
     }
 
-    public void setAverage(String average) {
+    public void setAverage(Double average) {
         this.average = average;
     }
 
@@ -124,7 +124,7 @@ public class Movie implements Serializable {
         this.rating = rating;
     }
 
-    public int getid() {
+    public int getiD() {
         return iD;
     }
 

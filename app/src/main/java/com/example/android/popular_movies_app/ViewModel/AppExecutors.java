@@ -24,9 +24,15 @@ public class AppExecutors {
         this.mainThread = mainThread;
     }
 
-    public AppExecutors() {
-        this(Executors.newSingleThreadExecutor(), Executors.newFixedThreadPool(THREAD_COUNT),
-                new MainThreadExecutor());
+    public static AppExecutors getInstance() {
+        if(sInstance == null) {
+            synchronized (LOCK) {
+                sInstance = new AppExecutors(Executors.newSingleThreadExecutor(),
+                        Executors.newFixedThreadPool(THREAD_COUNT),
+                        new MainThreadExecutor());
+            }
+        }
+        return sInstance;
     }
 
     public Executor disIO() {

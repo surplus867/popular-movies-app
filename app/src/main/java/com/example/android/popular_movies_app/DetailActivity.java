@@ -18,8 +18,11 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.android.popular_movies_app.ViewModel.MainViewModel;
 import com.example.android.popular_movies_app.adapter.ReviewAdapter;
 import com.example.android.popular_movies_app.adapter.TrailerAdapter;
+import com.example.android.popular_movies_app.database.MovieDatabase;
+import com.example.android.popular_movies_app.database.MovieEntry;
 import com.example.android.popular_movies_app.model.Movie;
 import com.example.android.popular_movies_app.model.Review;
 import com.example.android.popular_movies_app.model.ReviewResponse;
@@ -28,7 +31,9 @@ import com.example.android.popular_movies_app.model.TrailerResponse;
 import com.example.android.popular_movies_app.retrofits.MovieApi;
 import com.example.android.popular_movies_app.retrofits.RestClient;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -66,6 +71,8 @@ public class DetailActivity extends AppCompatActivity {
     private ReviewAdapter mReviewAdapter;
     private List<Trailer> mMovieTrailers;
     private List<Review> mMovieReviews;
+    private MovieDatabase mDb;
+    private MovieEntry mMovieEntry;
     private Movie mMovie;
 
     @Override
@@ -76,103 +83,97 @@ public class DetailActivity extends AppCompatActivity {
         getSupportActionBar().setTitle("MovieDetail");
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        ButterKnife.bind(this);
-
         mTrailerRecyclerView.setLayoutManager(new LinearLayoutManager(this));
         mTrailerRecyclerView.setNestedScrollingEnabled(false);
 
-      /*  if (savedInstanceState == null) {
-            Intent intent = getIntent();
-            Bundle bundle = intent.getExtras();
-            mMovie = (Movie) bundle.getSerializable("movie");
-            populateActivity(mMovie);
-            if (isOnline()) {
-                getReviews(mMovie.getiD());
-                getTrailers(mMovie.getiD());
-            }
 
-        }else{
-            mMovie = (Movie) savedInstanceState.getSerializable("movie");
-            populateActivity(mMovie);*/
+        ButterKnife.bind(this);
+
         Intent intent = getIntent();
         if (intent != null) {
             Movie movie = (Movie) intent.getSerializableExtra(ARG_Movie);
+            mDb = MovieDatabase.getInstance(getApplicationContext());
 
-            if (movie != null) {
 
+            if (movie!= null) {
 
                 mMovieTitle.setText(mMovie.getTitle());
                 mReleaseDate.setText(mMovie.getDate());
                 mMoviePlot.setText(mMovie.getOverview());
-                Glide.with(this).load("https://image.tmdb.org/t/p/w500" + mMovie.
+                String poster = "http://image.tmdb.org/t/p/w500";
+                Glide.with(this).load(poster + mMovie.
                         getMoviePoster()).into(mMoviePoster);
                 String userRatingText = mMovie.getVoteAverage() + "/10";
                 mVoteAverage.setText(userRatingText);
 
-                mFavorites.setOnClickListener(new View.OnClickListener() {
-
+                FloatingActionButton FAB = findViewById(R.id.favorite_button);
+                FAB.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        if (favorite == true) {
-                            saveFavorite();
-                            Toast.makeText(DetailActivity.this, "Already saved in favorites", Toast.LENGTH_SHORT).show();
-
-                        } else {
-                            int movie_id = getIntent().getExtras().getInt("id");
-                            deleteFavorite(movie_id);
-                            Toast.makeText(DetailActivity.this, "Removed from Favorites", Toast.LENGTH_SHORT).show();
+                        if(isChecked) {
+                            Snackbar.make(view, "Already saved in favorites", Snackbar.LENGTH_LONG)
+                                    .setAction("Action", null).show();
+                        }else{
 
                         }
-                    }
-                });
-                getReviews();
-                getTrailers();
+
+            });
+
             }
 
 
         private void getTrailers (int movieId){
-            RestClient restClient = new RestClient();
-            MovieApi movieApi = RestClient.getMovieApi().create(MovieApi.class);
-            Call<TrailerResponse> call = movieApi.getTrailers(movieId, API_KEY);
+                RestClient restClient = new RestClient();
+                MovieApi movieApi = RestClient.getMovieApi().create(MovieApi.class);
+                Call<TrailerResponse> call = movieApi.getTrailers(movieId, API_KEY);
 
-            call.enqueue(new Callback<TrailerResponse>() {
-                @Override
-                public void onResponse(Call<TrailerResponse> call, Response<TrailerResponse> response) {
-                    mMovieTrailers = response.body().getTrailerList();
-                    populateTrailers(mMovieTrailers);
-                }
+                call.enqueue(new Callback<TrailerResponse>() {
+                    @Override
+                    public void onResponse(Call<TrailerResponse> call, Response<TrailerResponse> response) {
+                        mMovieTrailers = response.body().getTrailerList();
+                        //populateTrailers(mMovieTrailers);
+                    }
 
-                @Override
-                public void onFailure(Call<TrailerResponse> call, Throwable t) {
-                    Log.d("Error", t.getMessage());
-                    Toast.makeText(DetailActivity.this, R.string.no_results_found, Toast.LENGTH_SHORT).show();
+                    @Override
+                    public void onFailure(Call<TrailerResponse> call, Throwable t) {
+                        Log.d("Error", t.getMessage());
+                        Toast.makeText(DetailActivity.this, R.string.no_results_found, Toast.LENGTH_SHORT).show();
 
-                }
-            });
+                    }
+                });
+            }
+
+            private void getReviews( int movieId) {
+                MovieApi movieApi = RestClient.getMovieApi().create(MovieApi.class);
+                Call<ReviewResponse> call = movieApi.getReviews(movieId, API_KEY);
+
+                call.enqueue(new Callback<ReviewResponse>() {
+                    @Override
+                    public void onResponse(Call<ReviewResponse> call, Response<ReviewResponse> response) {
+                        assert response.body() != null;
+                        mMovieReviews = response.body().getReviews();
+                        //populateReviews(mMovieReviews);
+
+                    }
+
+                    @Override
+                    public void onFailure(Call<ReviewResponse> call, Throwable t) {
+                        Toast.makeText(DetailActivity.this, R.string.no_results_found, Toast.LENGTH_SHORT).show();
+
+                    }
+                });
+
+            }
         }
-            private void getReviews() {
-            MovieApi movieApi = RestClient.getMovieApi().create(MovieApi.class);
-            Call<ReviewResponse> call = movieApi.getReviews(movieId, API_KEY);
 
-            call.enqueue(new Callback<ReviewResponse>() {
-                @Override
-                public void onResponse(Call<ReviewResponse> call, Response<ReviewResponse> response) {
-                    assert response.body() != null;
-                    mMovieReviews = response.body().getReviews();
-                    populateReviews(mMovieReviews);
+    private void initViews() {
+        mMovieTrailers = new ArrayList<>();
+        mTrailerAdapter = new TrailerAdapter(this, mMovieTrailers);
 
-                }
+    }
 
-                @Override
-                public void onFailure(Call<ReviewResponse> call, Throwable t) {
-                    Toast.makeText(DetailActivity.this, R.string.no_results_found, Toast.LENGTH_SHORT).show();
 
-                }
-            });
-
-        }
-
-        @Override
+    @Override
         protected void onSaveInstanceState (Bundle outState){
             super.onSaveInstanceState(outState);
             outState.putSerializable("movie", mMovie);
@@ -184,6 +185,9 @@ public class DetailActivity extends AppCompatActivity {
         }
     }
 }
+
+
+/*
 
     private void getTrailers(int movieId) {
         MovieApi movieApi = RestClient.getMovieApi().create(MovieApi.class);
@@ -208,4 +212,25 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void getReviews() {
+        MovieApi movieApi = RestClient.getMovieApi().create(MovieApi.class);
+        Call<ReviewResponse> call = movieApi.getReviews(movieId, API_KEY);
+
+        call.enqueue(new Callback<ReviewResponse>() {
+            @Override
+            public void onResponse(Call<ReviewResponse> call, Response<ReviewResponse> response) {
+                assert response.body() != null;
+                mMovieReviews = response.body().getReviews();
+                populateReviews(mMovieReviews);
+
+            }
+
+            @Override
+            public void onFailure(Call<ReviewResponse> call, Throwable t) {
+                Toast.makeText(DetailActivity.this, R.string.no_results_found, Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
     }
+    }*/
+

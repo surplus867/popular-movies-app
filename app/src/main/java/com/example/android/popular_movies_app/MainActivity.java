@@ -1,7 +1,10 @@
 package com.example.android.popular_movies_app;
 
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
@@ -14,10 +17,14 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.android.popular_movies_app.ViewModel.MainViewModel;
 import com.example.android.popular_movies_app.adapter.MovieAdapter;
+import com.example.android.popular_movies_app.database.MovieEntry;
 import com.example.android.popular_movies_app.model.Movie;
 import com.example.android.popular_movies_app.model.MoviesResponse;
 import com.example.android.popular_movies_app.retrofits.MovieApi;
@@ -48,6 +55,8 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
     private GridLayoutManager mLayoutManager;
 
+    private MainViewModel mainViewModel;
+
     private MovieAdapter mAdapter;
 
     private List<Movie> mMovies = new ArrayList<>();
@@ -59,6 +68,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
+
 
         // Check if we have data to display (after rotation)
         if (savedInstanceState != null) {
@@ -75,19 +85,13 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         mRecyclerView.setAdapter(mAdapter);
     }
 
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        outState.putSerializable(KEY_MOVIES_RESPONSE, mMoviesResponse);
-    }
-
     private void handleResults() {
         mLoadingIndicator.setVisibility(View.VISIBLE);
         mErrorMessage.setVisibility(View.GONE);
 
         Retrofit retrofit = RestClient.getMovieApi();
         MovieApi movieApi = retrofit.create(MovieApi.class);
-        Call<MoviesResponse> call = movieApi.getPopularMovies("");
+        Call<MoviesResponse> call = movieApi.getPopularMovies("api_key....");
         call.enqueue(new Callback<MoviesResponse>() {
             @Override
             public void onResponse(Call<MoviesResponse> call, Response<MoviesResponse> response) {
@@ -116,7 +120,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
         Retrofit retrofit = RestClient.getMovieApi();
         MovieApi movieApi = retrofit.create(MovieApi.class);
-        Call<MoviesResponse> call = movieApi.getTopRatedMovies("");
+        Call<MoviesResponse> call = movieApi.getTopRatedMovies("api_key.....");
         call.enqueue(new Callback<MoviesResponse>() {
             @Override
             public void onResponse(Call<MoviesResponse> call, Response<MoviesResponse> response) {
@@ -139,10 +143,16 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
     }
 
+    private boolean isNetworkAvailable() {
+        ConnectivityManager connectivityManager
+                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
+        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.main, menu);
+        getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
@@ -173,9 +183,12 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         if (sortOrder.equals(this.getString(R.string.pref_most_popular))) {
             Log.d(TAG, "Sorting by most popular");
             handleResults();
-        } else {
-            Log.d(TAG, "Sorting by vote average");
+        } else if (sortOrder.equals(this.getString(R.string.favorites))) {
+            Log.d(TAG, "Sorting by favorite");
             handleResults2();
+        } else{
+            Log.d(TAG, "Sorting by vote average");
+            handleResults();
         }
     }
 
@@ -187,6 +200,34 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         } else {
             checkSortOrder();
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable(KEY_MOVIES_RESPONSE, mMoviesResponse);
+    }
+
+    private void observeFavoriteMovies(){
+        MainViewModel viewModel = ViewModelProviders.of(this).get(MainViewModel.class);
+        viewModel.getFavoriteMovies().observe(this, new Observer<List<MovieEntry>>() {
+            @Override
+            public void onChanged(List<MovieEntry> movieEntries) {
+                List<Movie> mMovies = new ArrayList<>();
+                for (MovieEntry entry : movieEntries) {
+                    Movie movie = new Movie();
+                    movie.setiD(entry.getMovieId());
+                    movie.setOverview(entry.getOverview());
+                    movie.setTitle(entry.getOriginalTitle());
+                    movie.setMoviePoster(entry.getPosterPath());
+                    movie.setRating(entry.getOverview());
+
+                    mMovies.add(movie);
+                }
+                mAdapter.updateData(mMovies);
+
+            }
+        });
     }
 
     //here you can dynamically calculate the number of columns and the layout will adapt to the screen size and orientation

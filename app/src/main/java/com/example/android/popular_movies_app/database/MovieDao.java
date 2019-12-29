@@ -4,26 +4,23 @@ import androidx.lifecycle.LiveData;
 import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
+import androidx.room.OnConflictStrategy;
+import androidx.room.Query;
 
 import java.util.List;
 
-import retrofit2.http.Query;
 @Dao
 public interface MovieDao {
 
     @Query("SELECT * FROM movie")
     LiveData<List<MovieEntry>> loadAllMovies();
 
-    @Insert
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     void insertMovie(MovieEntry movieEntry);
-
 
     @Delete
     void deleteMovie(MovieEntry movieEntry);
 
-
-    @Query("SELECT * FROM movie WHERE movie_id = :movieId")
+    @Query("select * from movie where movie_id = :movieId")
     LiveData<MovieEntry> loadMovieByMovieId(int movieId);
-
-
 }

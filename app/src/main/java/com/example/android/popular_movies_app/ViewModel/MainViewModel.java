@@ -16,15 +16,15 @@ public class MainViewModel extends AndroidViewModel {
     // Constant for logging
     private static final String TAG = MainViewModel.class.getSimpleName();
 
-    private LiveData<List<MovieEntry>> mMovieEntry;
+    private LiveData<List<MovieEntry>> favorite;
 
     public MainViewModel(Application application) {
         super(application);
         MovieDatabase movieDatabase = MovieDatabase.getInstance(this.getApplication());
         Log.d(TAG, "Actively retrieving the tasks from the DataBase");
-        mMovieEntry = movieDatabase.movieDao().loadAllMovies();
+        favorite = movieDatabase.movieDao().loadAllMovies();
     }
-    public LiveData<List<MovieEntry>> getMovieEntry() {
-        return mMovieEntry;
+    public LiveData<List<MovieEntry>> getFavoriteMovies() {
+        return favorite;
     }
 }

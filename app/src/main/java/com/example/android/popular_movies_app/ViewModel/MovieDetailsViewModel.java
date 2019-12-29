@@ -6,11 +6,11 @@ import androidx.lifecycle.ViewModel;
 import com.example.android.popular_movies_app.database.MovieDatabase;
 import com.example.android.popular_movies_app.database.MovieEntry;
 
-public class AddFavoriteViewModel extends ViewModel {
+public class MovieDetailsViewModel extends ViewModel {
 
     private LiveData<MovieEntry> mMovieEntry;
 
-    public AddFavoriteViewModel(MovieDatabase movieDatabase, int movieId) {
+    public MovieDetailsViewModel(MovieDatabase movieDatabase, int movieId) {
         mMovieEntry = movieDatabase.movieDao().loadMovieByMovieId(movieId);
     }
 

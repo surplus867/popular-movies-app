@@ -56,7 +56,7 @@ public class Movie implements Serializable {
         return OVERVIEW;
     }
 
-    public static String getVoteAverage() {
+    public static double getVoteAverage() {
         return VOTE_AVERAGE;
     }
 
@@ -124,7 +124,7 @@ public class Movie implements Serializable {
         this.rating = rating;
     }
 
-    public int getiD() {
+    public int getid() {
         return iD;
     }
 

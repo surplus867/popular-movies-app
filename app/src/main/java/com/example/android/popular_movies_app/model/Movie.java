@@ -56,10 +56,6 @@ public class Movie implements Serializable {
         return OVERVIEW;
     }
 
-    public static String getVoteAverage() {
-        return VOTE_AVERAGE;
-    }
-
     public static String getReleaseDate() {
         return RELEASE_DATE;
     }

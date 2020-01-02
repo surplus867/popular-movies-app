@@ -30,6 +30,7 @@ import com.example.android.popular_movies_app.model.MoviesResponse;
 import com.example.android.popular_movies_app.retrofits.MovieApi;
 import com.example.android.popular_movies_app.retrofits.RestClient;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,14 +54,14 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
     @BindView(R.id.pb_loading_indicator)
     ProgressBar mLoadingIndicator;
 
+    //Declare GridLayoutManager for RV
     private GridLayoutManager mLayoutManager;
 
     private MainViewModel mainViewModel;
-
+    //declare MovieAdapter adapter
     private MovieAdapter mAdapter;
-
+    //declare movie details list to retrieve data inside it
     private List<Movie> mMovies = new ArrayList<>();
-
     private MoviesResponse mMoviesResponse;
 
     @Override
@@ -73,7 +74,9 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         // Check if we have data to display (after rotation)
         if (savedInstanceState != null) {
             mMoviesResponse = (MoviesResponse) savedInstanceState.getSerializable(KEY_MOVIES_RESPONSE);
-            mMovies = mMoviesResponse.getMovies();
+            if (mMoviesResponse != null) {
+                mMovies = mMoviesResponse.getMovies();
+            }
         } else {
             handleResults();
         }
@@ -86,7 +89,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
         observeFavoriteMovies();
 
-}
+    }
 
     private void handleResults() {
         mLoadingIndicator.setVisibility(View.VISIBLE);
@@ -145,13 +148,24 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         });
 
     }
+    //Checks if online
+    //https://stackoverflow.com/questions/1560788/how-to-check-internet-access-on-android-inetaddress-never-times-out
+        public boolean isNetworkAvailable() {
+            Runtime runtime = Runtime.getRuntime();
+            try {
+                Process ipProcess = runtime.exec("/system/bin/ping -c 18.8.8.8 ");
+                int exitValue = ipProcess.waitFor();
+                return (exitValue == 0);
 
-    private boolean isNetworkAvailable() {
-        ConnectivityManager connectivityManager
-                = (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo activeNetworkInfo = connectivityManager.getActiveNetworkInfo();
-        return activeNetworkInfo != null && activeNetworkInfo.isConnected();
-    }
+
+            } catch (IOException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            return false;
+        }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {

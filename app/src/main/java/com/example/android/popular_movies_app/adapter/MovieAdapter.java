@@ -23,7 +23,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class MovieAdapter extends RecyclerView.Adapter<MovieAdapter.ViewHolder> {
-    private String IMAGE_BASE_URL = "http://image.tmdb.org/t/p/w342";
+    private String IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w342";
 
     private List<Movie> mMovies;
     private Context mContext;

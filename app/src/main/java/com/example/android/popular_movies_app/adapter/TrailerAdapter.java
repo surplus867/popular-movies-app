@@ -29,6 +29,12 @@ public class TrailerAdapter extends RecyclerView.Adapter<TrailerAdapter.ViewHold
         mTrailer = trailer;
     }
 
+    public void updateData(List<Trailer> trailers) {
+        mTrailer = trailers;
+        notifyDataSetChanged();
+
+    }
+
 
     @Override
     public TrailerAdapter.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {

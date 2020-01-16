@@ -1,10 +1,7 @@
 package com.example.android.popular_movies_app;
 
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
@@ -21,6 +18,7 @@ import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.android.popular_movies_app.ViewModel.MainViewModel;
 import com.example.android.popular_movies_app.adapter.MovieAdapter;
@@ -51,12 +49,13 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
     RecyclerView mRecyclerView;
     @BindView(R.id.tv_error_message)
     TextView mErrorMessage;
+    @BindView(R.id.main_content)
+    SwipeRefreshLayout mSwipeContainer;
     @BindView(R.id.pb_loading_indicator)
     ProgressBar mLoadingIndicator;
 
     //Declare GridLayoutManager for RV
     private GridLayoutManager mLayoutManager;
-
     private MainViewModel mainViewModel;
     //declare MovieAdapter adapter
     private MovieAdapter mAdapter;
@@ -69,7 +68,6 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
-
 
         // Check if we have data to display (after rotation)
         if (savedInstanceState != null) {
@@ -86,6 +84,14 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
         mRecyclerView.setLayoutManager(mLayoutManager);
         mAdapter = new MovieAdapter(this, mMovies);
         mRecyclerView.setAdapter(mAdapter);
+        mSwipeContainer.setColorSchemeResources(android.R.color.holo_orange_dark);
+        mSwipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                handleResults();
+                Toast.makeText(MainActivity.this, "Movies Refreshed", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         observeFavoriteMovies();
 
@@ -97,7 +103,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
         Retrofit retrofit = RestClient.getMovieApi();
         MovieApi movieApi = retrofit.create(MovieApi.class);
-        Call<MoviesResponse> call = movieApi.getPopularMovies("");
+        Call<MoviesResponse> call = movieApi.getPopularMovies("caa7bbb8acf08fcdc2b3f26cb3219b89");
         call.enqueue(new Callback<MoviesResponse>() {
             @Override
             public void onResponse(Call<MoviesResponse> call, Response<MoviesResponse> response) {
@@ -126,7 +132,7 @@ public class MainActivity extends AppCompatActivity implements SharedPreferences
 
         Retrofit retrofit = RestClient.getMovieApi();
         MovieApi movieApi = retrofit.create(MovieApi.class);
-        Call<MoviesResponse> call = movieApi.getTopRatedMovies("");
+        Call<MoviesResponse> call = movieApi.getTopRatedMovies("caa7bbb8acf08fcdc2b3f26cb3219b89");
         call.enqueue(new Callback<MoviesResponse>() {
             @Override
             public void onResponse(Call<MoviesResponse> call, Response<MoviesResponse> response) {

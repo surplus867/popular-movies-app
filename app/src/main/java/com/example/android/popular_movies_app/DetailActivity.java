@@ -9,10 +9,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.android.popular_movies_app.ViewModel.AppExecutors;
 import com.example.android.popular_movies_app.adapter.ReviewAdapter;
 import com.example.android.popular_movies_app.adapter.TrailerAdapter;
 import com.example.android.popular_movies_app.database.MovieDatabase;
@@ -39,8 +39,10 @@ import retrofit2.Response;
 
 public class DetailActivity extends AppCompatActivity {
 
-    public static final String ARG_Movie = "DETAIL_MOVIE";
+    public static final String EXTRA_MOVIE_ID = "EXTRA_MOVIE_ID";
     private static final String API_KEY = "";
+    // Declare an ActivityDetailBinding called mDetailBinding
+    private ActivityDetailBinding mDetailBinding;
 
     @BindView(R.id.posterImageView)
     ImageView mMoviePoster;
@@ -70,30 +72,30 @@ public class DetailActivity extends AppCompatActivity {
     private MovieEntry mMovieEntry;
     private Movie mMovie;
     private boolean isChecked;
-    // Declare an ActivityDetailBinding called mDetailBinding
-    private ActivityDetailBinding mDetailBinding;
+
+    int movie_id;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mDetailBinding = DataBindingUtil.setContentView(this, R.layout.activity_detail);
 
-
+        // Setup action bar if present
         if (getSupportActionBar() != null) {
             getSupportActionBar().setTitle("MovieDetail");
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+            getSupportActionBar().setHomeButtonEnabled(true);
 
         }
 
         mTrailerAdapter = new TrailerAdapter(this, mMovieTrailers);
+        mDb = MovieDatabase.getInstance(getApplicationContext());
 
 
         ButterKnife.bind(this);
 
         Intent intent = getIntent();
         if (intent != null) {
-            mMovie = (Movie) intent.getSerializableExtra(ARG_Movie);
-            mDb = MovieDatabase.getInstance(getApplicationContext());
+            mMovie = (Movie) intent.getSerializableExtra(EXTRA_MOVIE_ID);
 
 
             if (mMovie != null) {
@@ -106,17 +108,42 @@ public class DetailActivity extends AppCompatActivity {
                         getPoserPath()).into(mMoviePoster);
                 String userRatingText = mMovie.getAverage() + "/10";
                 mVoteAverage.setText(userRatingText);
+                movie_id = mMovie.getiD();
 
                 FloatingActionButton FAB = findViewById(R.id.favorite_button);
                 FAB.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         if (isChecked) {
-                            Snackbar.make(view, "Already saved in favorites", Snackbar.LENGTH_LONG)
-                                    .setAction("Action", null).show();
+                            saveFavorite();
+                            Snackbar.make(view, "Already saved in favorites",
+                                    Snackbar.LENGTH_LONG).show();
                         } else {
+                            deleteFavorite(movie_id);
+                            Snackbar.make(view, "Removed from Favorite",
+                                    Snackbar.LENGTH_SHORT).show();
 
                         }
+                    }
+
+                    private void saveFavorite() {
+                        mMovieEntry= new MovieEntry(mMovie.getiD(), mMovie.getTitle(), mMovie.getRating(),
+                                mMovie.getPoserPath(), mMovie.getOverview());
+                        AppExecutors.getInstance().disIO().execute(new Runnable() {
+                            @Override
+                            public void run() {
+                                mDb.movieDao().insertMovie(mMovieEntry);
+                            }
+                        });
+                    }
+
+                    private void deleteFavorite(final int movie_id){
+                        AppExecutors.getInstance().disIO().execute(new Runnable() {
+                            @Override
+                            public void run() {
+                                mDb.movieDao().deleteMovie(mMovieEntry);
+                            }
+                        });
                     }
 
                 });
@@ -124,16 +151,20 @@ public class DetailActivity extends AppCompatActivity {
 
         }
     }
-    private void getTrailers(int movieId){
-        RestClient restClient = new RestClient();
+    private void getTrailers(int movie_id){
         MovieApi movieApi = RestClient.getMovieApi().create(MovieApi.class);
-        Call<TrailerResponse> call = movieApi.getTrailers(movieId, API_KEY);
+        Call<TrailerResponse> call = movieApi.getTrailers(movie_id, API_KEY);
 
         call.enqueue(new Callback<TrailerResponse>() {
             @Override
-            public void onResponse(Call<TrailerResponse> call, Response<TrailerResponse> response) {
-                mMovieTrailers = response.body().getTrailerList();
-                mTrailerAdapter.updateData(mMovieTrailers);
+          public void onResponse(Call<TrailerResponse> call, Response<TrailerResponse> response) {
+                if (response.body() != null) {
+                    mMovieTrailers = response.body().getTrailerList();
+                    mTrailerRecyclerView.setAdapter(new TrailerAdapter(getApplicationContext(), mMovieTrailers));
+                    mTrailerAdapter.updateData(mMovieTrailers);
+                }
+
+
             }
 
             @Override
@@ -168,13 +199,6 @@ public class DetailActivity extends AppCompatActivity {
     }
 
 
-    private void initViews() {
-        mMovieTrailers = new ArrayList<>();
-        mTrailerAdapter = new TrailerAdapter(this, mMovieTrailers);
-
-    }
-
-
     @Override
     protected void onSaveInstanceState(Bundle outState){
         super.onSaveInstanceState(outState);
@@ -189,5 +213,6 @@ public class DetailActivity extends AppCompatActivity {
     private boolean isOnline() {
         return true;
     }
+
 
 }

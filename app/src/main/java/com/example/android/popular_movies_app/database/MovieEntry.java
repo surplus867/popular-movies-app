@@ -29,8 +29,7 @@ public class MovieEntry {
     private String overview;
 
     @Ignore
-    public MovieEntry(int movieId, String originalTitle, String posterPath, double voteAverage,
-                      String releaseDate, String overview) {
+    public MovieEntry(int movieId, String title, String rating, String originalTitle, String posterPath) {
         this.movieId = movieId;
         this.originalTitle = originalTitle;
         this.posterPath = posterPath;
